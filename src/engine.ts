@@ -896,6 +896,8 @@ export class Engine {
     this.manageAssets(logSun, logEarth);
 
     const g = this.guides ? 1 : 0;
+    // Close to a planet the guides step back so the planet has the frame to itself.
+    const closeUp = this.focus.radius > 0 ? smoothstep(25, 90, 10 ** this.logD / this.focus.radius) : 1;
     const sunPc = distSun / PC;
 
     // --- exposure -----------------------------------------------------------------------------
@@ -911,7 +913,7 @@ export class Engine {
     if (this.milkyWay) {
       const u = this.milkyWay.material.uniforms;
       const outside = smoothstep(19.6, 21.0, logSun);
-      const bright = this.longExposure ? 0.05 + 0.1 * outside : 0.03 * Math.min(1, (2.5e20 / Math.max(distSun, 2.5e20)) ** 2);
+      const bright = this.longExposure ? 0.013 + 0.05 * outside : 0.03 * Math.min(1, (2.5e20 / Math.max(distSun, 2.5e20)) ** 2);
       u.uAlpha.value = bright;
       u.uMinPx.value = 1.2;
       this.milkyWay.visible = logSun < 25.2;
@@ -949,7 +951,7 @@ export class Engine {
       const bodyDist = length(cameraRelative(this.nodes.get(o.body)!, cam));
       const parentDist = o.body === 'moon' ? distEarth : distSun;
       const isFocus = this.focus.id === o.body;
-      const a = g * smoothstep(0.02, 0.1, bodyDist / o.a) * (1 - smoothstep(2.3, 3.0, Math.log10(parentDist / o.a)));
+      const a = g * closeUp * smoothstep(0.02, 0.1, bodyDist / o.a) * (1 - smoothstep(2.3, 3.0, Math.log10(parentDist / o.a)));
       o.layer.material.uniforms.uAlpha.value = a * (isFocus ? 0.9 : 0.34);
       o.layer.material.uniforms.uColor.value.setHex(isFocus ? ACCENT_INK : PAPER);
       o.layer.visible = a > 0.003;
@@ -1023,6 +1025,7 @@ export class Engine {
       let show = orbitPx > 34 || isFocus;
       if (body.def.id === 'sun') show = logSun < 21.4;
       if (body.def.id === 'earth' && !isFocus && orbitPx <= 34) show = false;
+      if (!isFocus && closeUp < 0.5) show = false;
       if (show) {
         candidates.push({ item: target, x: screen.x, y: screen.y, radius: Math.min(px, 4000), depth: dist });
         if (px < 90 || isFocus) {
@@ -1155,6 +1158,16 @@ export class Engine {
   /** For tests and recordings: the current camera, in plain numbers. */
   debugState(): { focus: string; logD: number; az: number; el: number; look: Vec3 } {
     return { focus: this.focus.id, logD: this.logD, az: this.az, el: this.el, look: this.lastBasis.look };
+  }
+
+  /** Put the camera on the sunlit side of the focus, `turn` radians round from the Sun, `el` above the ecliptic. */
+  sunward(turn: number, el: number, logD?: number): void {
+    const toSun = normalize(relativeTo(this.sunNode, this.focus.node));
+    this.az = azElOf(toSun, ECLIPTIC_NORTH, REF).az + turn;
+    this.el = el;
+    if (logD !== undefined) this.logD = this.targetLogD = clamp(logD, this.minLog, LOG_MAX);
+    this.fly = null;
+    this.invalidate();
   }
 
   /** Jump without animation (used by the screenshot harness and deep links). */
