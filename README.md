@@ -4,6 +4,8 @@
 
 Every size and every distance is real. The whole journey downloads under 3 MB.
 
+**[Open Lookback](https://pratyushshivam.github.io/lookback/)**
+
 ![The journey from Earth to the edge of the observable universe, sped up](docs/journey.gif)
 
 [Full-quality video (MP4, 19 seconds)](docs/journey.mp4)
