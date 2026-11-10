@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "data": "tsx scripts/build-data.ts",
-    "textures": "tsx scripts/build-textures.ts"
+    "textures": "tsx scripts/build-textures.ts",
+    "readme": "tsx scripts/build-readme-art.ts"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
