@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f2eee5" />
+    <title>Lookback: the universe at true scale</title>
+    <meta
+      name="description"
+      content="Start on Earth and pull back past the Moon, the planets, 109,000 real stars and 157,000 real galaxies, all at true size and distance, to the edge of the observable universe."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2315140f'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23f2eee5' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ff6b3d'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="loader" role="status" aria-live="polite">
+      <div class="loader-inner">
+        <p class="eyebrow">A true-scale universe</p>
+        <h1 class="loader-title">Look<span>back</span></h1>
+        <div class="loader-bar"><i></i></div>
+        <p class="loader-note">Finding Earth…</p>
+      </div>
+    </div>
+
+    <canvas id="space" aria-label="A view of space. Scroll or pinch to pull back, drag to look around." tabindex="0"></canvas>
+    <div id="labels" aria-hidden="true"></div>
+
+    <header class="top">
+      <a class="mark" href="./" aria-label="Lookback, back to Earth">Look<span>back</span></a>
+      <nav class="tools" aria-label="View options">
+        <button id="btn-guides" class="chip" aria-pressed="true" title="Orbit lines, labels, distance rings and markers for things too small to see. Sizes and distances are never changed.">Guides</button>
+        <button id="btn-exposure" class="chip" aria-pressed="true" title="On: brightness is raised as you leave, like a long camera exposure. Off: only what the unaided eye would see.">Long exposure</button>
+        <button id="btn-places" class="chip" aria-haspopup="true" aria-expanded="false">Places</button>
+        <button id="btn-about" class="chip">About</button>
+      </nav>
+    </header>
+
+    <div id="places" class="sheet" hidden>
+      <p class="eyebrow">Fly to</p>
+      <ul id="places-list"></ul>
+    </div>
+
+    <aside id="info" class="card" hidden aria-live="polite">
+      <button class="close" id="info-close" aria-label="Close">×</button>
+      <p class="eyebrow" id="info-kind"></p>
+      <h2 id="info-title"></h2>
+      <p id="info-facts"></p>
+      <dl id="info-stats"></dl>
+      <p class="src">Source: <a id="info-source" target="_blank" rel="noopener"></a></p>
+    </aside>
+
+    <section id="readout" aria-label="Where you are">
+      <p class="eyebrow" id="chapter-title">Earth</p>
+      <p class="distance"><span id="distance">–</span><small>from Earth</small></p>
+      <p class="light" id="light"></p>
+      <p class="caption" id="chapter-text"></p>
+    </section>
+
+    <nav id="rail" aria-label="Scales">
+      <div class="track"><i id="rail-thumb"></i></div>
+      <ol id="rail-stops"></ol>
+    </nav>
+
+    <div class="dock">
+      <button id="btn-out" class="round" aria-label="Pull back (hold)">−</button>
+      <button id="btn-play" class="play"><span class="ico"></span><span class="txt">Play the journey</span><i class="prog"></i></button>
+      <button id="btn-in" class="round" aria-label="Move in (hold)">+</button>
+    </div>
+
+    <p id="hint">Scroll to pull back · drag to look around · click anything</p>
+    <pre id="stats" hidden></pre>
+
+    <dialog id="about">
+      <button class="close" id="about-close" aria-label="Close">×</button>
+      <p class="eyebrow">About</p>
+      <h2>Everything here is at its real size and its real distance.</h2>
+      <p>Earth, the Moon and the planets are where they are right now, from NASA JPL orbital elements. The 109,400 stars are real, from the HYG catalogue, at their measured positions, colours and brightness. The 157,000 galaxies are real, from the Sloan Digital Sky Survey. The asteroids and Kuiper belt objects are real, from the JPL Small-Body Database.</p>
+      <h3>What is an aid, and what is not</h3>
+      <ul>
+        <li><b>Guides</b> add orbit lines, names, distance rings and a small ring around anything too small to see. Turn them off and nothing is drawn that is not there.</li>
+        <li><b>Long exposure</b> raises brightness as you travel, as a camera would with a longer exposure. Turn it off for the unaided eye: beyond a few light-years, almost everything goes dark.</li>
+        <li><b>The Milky Way</b> is generated from the accepted model of its shape (a bar, four arms, the Sun 26,700 light-years from the centre). Its individual points are not real stars. The soft glows of named galaxies show their position and rough size, not their true shape.</li>
+        <li>Beyond the Local Group, “distance” is the distance today, and the light time is how long ago the light left, using the Planck 2018 measurements of the expanding universe.</li>
+      </ul>
+      <h3>Keys</h3>
+      <p class="keys"><kbd>↑</kbd><kbd>↓</kbd> pull back and move in · <kbd>←</kbd><kbd>→</kbd> look around · <kbd>Space</kbd> play or pause · <kbd>G</kbd> guides · <kbd>E</kbd> exposure · <kbd>H</kbd> home · <kbd>Esc</kbd> close</p>
+      <h3>Credits</h3>
+      <ul class="credits">
+        <li>Stars: <a href="https://www.astronexus.com/projects/hyg" target="_blank" rel="noopener">HYG database 4.1</a>, David Nash, CC BY-SA 4.0 (Hipparcos, Yale Bright Star and Gliese catalogues).</li>
+        <li>Galaxies: <a href="https://www.sdss.org/" target="_blank" rel="noopener">Sloan Digital Sky Survey</a> Data Release 17, public domain.</li>
+        <li>Planet positions: <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html" target="_blank" rel="noopener">NASA JPL Solar System Dynamics</a>. Small bodies: <a href="https://ssd-api.jpl.nasa.gov/doc/sbdb_query.html" target="_blank" rel="noopener">JPL Small-Body Database</a>.</li>
+        <li>Planet maps: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a>, CC BY 4.0, based on NASA imagery; resized.</li>
+        <li>Sizes and facts: NASA Planetary Fact Sheets and NASA Science. Rotation: IAU WGCCRE 2015.</li>
+        <li>Cosmology: Planck Collaboration 2018. Typeface: Geist, SIL Open Font License.</li>
+      </ul>
+      <p class="by">Made by <a href="https://pratyushshivam.com" target="_blank" rel="noopener">Pratyush Shivam</a>.</p>
+    </dialog>
+
+    <noscript>Lookback needs JavaScript and WebGL to draw the universe.</noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

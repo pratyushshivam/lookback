@@ -73,7 +73,7 @@ function parseCsvLine(line: string): string[] {
     .filter(({ s }) => s.name)
     .map(({ s, index }) => ({
       name: s.name, index, mag: s.mag, abs: s.abs, spect: s.spect, con: s.con, bf: s.bf,
-      hip: s.hip ? Number(s.hip) : null, pc: s.dist,
+      hip: s.hip ? Number(s.hip) : null, pc: s.dist, bv: s.bv,
     }));
   writeFileSync(new URL('star-names.json', OUT), JSON.stringify(named));
   console.log(`stars: ${stars.length} kept (${SPLIT} + ${stars.length - SPLIT}), ${skipped} without a distance left out, ${named.length} named`);
