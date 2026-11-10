@@ -1,0 +1,29 @@
+{
+  "name": "lookback",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A true-scale fly-through of the universe, from Earth to the edge of what light has had time to show us.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "data": "tsx scripts/build-data.ts",
+    "textures": "tsx scripts/build-textures.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/three": "^0.187.0",
+    "sharp": "^0.35.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.7",
+    "vitest": "^5.1.0"
+  }
+}
