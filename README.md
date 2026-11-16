@@ -9,6 +9,7 @@
   <a href="#how-it-stays-precise">Precision</a> ·
   <a href="#how-it-stays-light">Weight</a> ·
   <a href="#run-it">Run it</a> ·
+  <a href="https://www.pratyushshivam.com/projects/lookback/">The full write-up</a> ·
   <a href="https://www.pratyushshivam.com/">pratyushshivam.com</a>
 </p>
 
